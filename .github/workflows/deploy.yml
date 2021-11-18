@@ -15,6 +15,7 @@ env:
 
 jobs:
   deploy:
+    name: Deploy Job
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     concurrency:
@@ -56,15 +57,21 @@ jobs:
           destination_dir: ${{ env.PR_NAME }}/storybook
 
   clean:
+    name: Clean Preview Job
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Clean Preview
     steps:
+      - name: Set GitHub Actions as Commit Author
+        run: |
+          git config --global user.name github-actions
+          git config --global user.email github-actions@github.com
+
       - uses: actions/checkout@v2
         with:
           ref: gh-pages
   
-      - run: |
+      - name: Remove PR preview dir
+        run: |
           git rm -r ${{ env.PR_NAME }}
           git add .
           git commit -m 'deploy: clean pr ${{ env.PR_NAME }}'
