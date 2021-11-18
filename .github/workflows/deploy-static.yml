@@ -58,14 +58,25 @@ jobs:
           publish_dir: ${{ env.PUBLISH_DIR }}
           destination_dir: ${{ env.PR_NAME }}/${{ env.DESTINATION_DIR }}
 
-      - name: Create comment
+      - name: Find Comment
+        uses: peter-evans/find-comment@v1
+        if: ${{ github.ref != 'refs/heads/main' }}
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Deploy preview
+
+      - name: Create or update comment
         uses: peter-evans/create-or-update-comment@v1
         if: ${{ github.ref != 'refs/heads/main' }}
         with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Deploy preview:
             - [storybook](${{ env.PREVIEW_URL }})
+          edit-mode: replace
   
   clean:
     name: Clean Preview Job
