@@ -5,11 +5,13 @@ on:
     branches:
       - main
   pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - main
 
 env:
   PR_NAME: pr-${{ github.event.pull_request.id }}
+  PUBLISH_DIR: storybook-static
 
 jobs:
   deploy:
@@ -17,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
+  
     steps:
       - uses: actions/checkout@v2
 
@@ -41,7 +44,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
+          publish_dir: ${{ env.PUBLISH_DIR }}
           destination_dir: storybook
 
       - name: Deploy Preview
@@ -49,7 +52,7 @@ jobs:
         if: ${{ github.ref != 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
+          publish_dir: ${{ env.PUBLISH_DIR }}
           destination_dir: ${{ env.PR_NAME }}/storybook
 
   clean:
@@ -60,5 +63,5 @@ jobs:
       - run: |
           git rm -r ${{ env.PR_NAME }}
           git add .
-          git commit -m 'chore: clean preview pr ${{ env.PR_NAME }}'
+          git commit -m 'deploy: clean pr ${{ env.PR_NAME }}'
           git push -f origin gh-pages
