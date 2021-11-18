@@ -91,8 +91,8 @@ jobs:
   
       - name: Set GitHub Actions as Commit Author
         run: |
-          git config user.name ${{ env.GITHUB_ACTOR }}
-          git config user.email ${{ env.GITHUB_ACTOR }}@users.noreply.github.com
+          git config user.name ${{ github.event.pull_request.user.login }}
+          git config user.email ${{ github.event.pull_request.user.login }}@users.noreply.github.com
   
       - name: Remove PR preview dir
         run: |
