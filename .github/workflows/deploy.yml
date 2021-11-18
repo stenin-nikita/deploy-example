@@ -9,7 +9,7 @@ on:
       - main
 
 env:
-  PR_NAME: pr-${{ github.event.pull_request.node_id }}
+  PR_NAME: pr-${{ github.event.pull_request.id }}
 
 jobs:
   deploy:
@@ -36,18 +36,29 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy
+      - name: Deploy Latest
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/main' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./storybook-static
+          destination_dir: storybook
+
+      - name: Deploy Preview
         uses: peaceiris/actions-gh-pages@v3
         if: ${{ github.ref != 'refs/heads/main' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./storybook-static
-          destination_dir: $PR_NAME/storybook
+          destination_dir: ${{ env.PR_NAME }}/storybook
 
   clean:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
-    name: Close Pull Request Job
+    name: Clean Preview
     steps:
-      - run: echo 'Close PR $PR_NAME'
-          
+      - run: |
+          git rm -r ${{ env.PR_NAME }}
+          git add .
+          git commit -m 'chore: clean preview pr ${{ env.PR_NAME }}'
+          git push -f origin gh-pages
