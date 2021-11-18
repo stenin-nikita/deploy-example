@@ -10,8 +10,10 @@ on:
       - main
 
 env:
-  PR_NAME: pr-${{ github.event.pull_request.id }}
+  PR_NAME: pr-${{ github.event.pull_request.number }}
   PUBLISH_DIR: storybook-static
+  DESTINATION_DIR: storybook
+  PREVIEW_URL: https://${{ github.context.repo.owner }}.github.io/${{ github.context.repo.repo }}/${{ env.PR_NAME }}/${{ env.DESTINATION_DIR }}/
 
 jobs:
   deploy:
@@ -46,7 +48,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.PUBLISH_DIR }}
-          destination_dir: storybook
+          destination_dir: ${{ env.DESTINATION_DIR }}
 
       - name: Deploy Preview
         uses: peaceiris/actions-gh-pages@v3
@@ -54,8 +56,17 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ${{ env.PUBLISH_DIR }}
-          destination_dir: ${{ env.PR_NAME }}/storybook
+          destination_dir: ${{ env.PR_NAME }}/${{ env.DESTINATION_DIR }}
 
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        if: ${{ github.ref != 'refs/heads/main' }}
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Deploy preview:
+            - [storybook](${{ env.PREVIEW_URL }})
+  
   clean:
     name: Clean Preview Job
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
@@ -63,8 +74,8 @@ jobs:
     steps:
       - name: Set GitHub Actions as Commit Author
         run: |
-          git config --global user.name github-actions
-          git config --global user.email github-actions@github.com
+          git config user.name ${{ env.GITHUB_ACTOR }}
+          git config user.email ${{ env.GITHUB_ACTOR }}@users.noreply.github.com
 
       - uses: actions/checkout@v2
         with:
@@ -75,4 +86,4 @@ jobs:
           git rm -r ${{ env.PR_NAME }}
           git add .
           git commit -m 'deploy: clean pr ${{ env.PR_NAME }}'
-          git push -f origin gh-pages
+          git push origin gh-pages
