@@ -60,6 +60,10 @@ jobs:
     runs-on: ubuntu-latest
     name: Clean Preview
     steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+  
       - run: |
           git rm -r ${{ env.PR_NAME }}
           git add .
