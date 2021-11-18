@@ -13,10 +13,12 @@ env:
   PR_NAME: pr-${{ github.event.pull_request.number }}
   PUBLISH_DIR: storybook-static
   DESTINATION_DIR: storybook
-  PREVIEW_URL: https://${{ github.context.repo.owner }}.github.io/${{ github.context.repo.repo }}/${{ env.PR_NAME }}/${{ env.DESTINATION_DIR }}/
 
 jobs:
   deploy:
+    env:
+      PREVIEW_URL: https://${{ github.context.repo.owner }}.github.io/${{ github.context.repo.repo }}/${{ env.PR_NAME }}/${{ env.DESTINATION_DIR }}/
+
     name: Deploy Job
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
