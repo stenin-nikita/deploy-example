@@ -59,6 +59,11 @@ jobs:
           publish_dir: ${{ env.PUBLISH_DIR }}
           destination_dir: docs/.versions/${{ env.PR_NAME }}
 
+      - name: Dump context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - uses: actions/checkout@v2
         with:
           ref: gh-pages
