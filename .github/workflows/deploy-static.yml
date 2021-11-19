@@ -119,7 +119,7 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
             Deploy preview:
-            - storybook [${{ env.PREVIEW_URL }}](${{ env.PREVIEW_URL }})
+            - [${{ env.PREVIEW_URL }}](${{ env.PREVIEW_URL }})
           edit-mode: replace
 
   clean:
