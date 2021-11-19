@@ -1,1 +1,1 @@
-./.versions/latest/runtime~main.909d038f912f063e8837.manager.bundle.js
+.versions/latest/runtime~main.909d038f912f063e8837.manager.bundle.js

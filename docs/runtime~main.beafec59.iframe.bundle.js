@@ -1,1 +1,1 @@
-./.versions/latest/runtime~main.beafec59.iframe.bundle.js
+.versions/latest/runtime~main.beafec59.iframe.bundle.js

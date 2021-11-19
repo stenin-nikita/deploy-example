@@ -1,1 +1,1 @@
-./.versions/latest/11.49c687eaa6261f8b7be2.manager.bundle.js
+.versions/latest/11.49c687eaa6261f8b7be2.manager.bundle.js

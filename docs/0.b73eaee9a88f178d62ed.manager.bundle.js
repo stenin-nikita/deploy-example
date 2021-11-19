@@ -1,1 +1,1 @@
-./.versions/latest/0.b73eaee9a88f178d62ed.manager.bundle.js
+.versions/latest/0.b73eaee9a88f178d62ed.manager.bundle.js

@@ -1,1 +1,1 @@
-./.versions/latest/5.a6e6f18b.iframe.bundle.js
+.versions/latest/5.a6e6f18b.iframe.bundle.js

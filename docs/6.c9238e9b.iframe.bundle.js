@@ -1,1 +1,1 @@
-./.versions/latest/6.c9238e9b.iframe.bundle.js
+.versions/latest/6.c9238e9b.iframe.bundle.js

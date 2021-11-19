@@ -1,1 +1,1 @@
-./.versions/latest/main.ce406c7e93b98325390e.manager.bundle.js
+.versions/latest/main.ce406c7e93b98325390e.manager.bundle.js
